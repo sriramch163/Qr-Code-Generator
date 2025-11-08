@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: qr-code-generator
+  labels:
+    app: qr-code-generator
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: qr-code-generator
+  template:
+    metadata:
+      labels:
+        app: qr-code-generator
+    spec:
+      containers:
+      - name: qr-code-generator
+        image: your-dockerhub-username/qr-code-generator:latest
+        ports:
+        - containerPort: 3000
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "100m"
+          limits:
+            memory: "256Mi"
+            cpu: "200m"
