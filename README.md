@@ -14,17 +14,29 @@ A simple web application that generates QR codes for product information includi
 
 ```
 QR-Code-Generator/
+├── .github/
+│   └── workflows/
+│       ├── cleanup.yml     # Cleanup workflow
+│       ├── deploy.yml      # EKS deployment workflow
+│       └── work-flow.yml   # Build and push Docker image
 ├── Client/
 │   ├── index.html          # Main client interface
 │   ├── script.js           # Client-side JavaScript
-│   ├── style.css           # Styling
-└── Server/
-    ├── app.js              # Express server setup
-    ├── controller.js       # Request handlers
-    ├── routes.js           # API routes
-    ├── service.js          # Business logic
-    ├── package.json        # Dependencies
-    └── package-lock.json   # Dependency lock file
+│   └── style.css           # Styling
+├── k8s/
+│   ├── deployment.yaml     # Kubernetes deployment
+│   ├── kustomization.yaml  # Kustomization config
+│   ├── namespace.yaml      # Namespace definition
+│   └── service.yaml        # Service definition
+├── Server/
+│   ├── app.js              # Express server setup
+│   ├── controller.js       # Request handlers
+│   ├── routes.js           # API routes
+│   ├── service.js          # Business logic
+│   ├── package.json        # Dependencies
+│   └── package-lock.json   # Dependency lock file
+├── Dockerfile              # Docker container definition
+└── README.md
 ```
 
 ## Quick Start
@@ -66,6 +78,29 @@ QR-Code-Generator/
 2. Open `Client/index.html` in your web browser
 3. Enter product details and generate QR codes
 
+### Option 3: Docker Deployment
+
+1. Build the Docker image:
+   ```bash
+   docker build -t qr-code-generator .
+   ```
+2. Run the container:
+   ```bash
+   docker run -p 3000:3000 qr-code-generator
+   ```
+3. Access the application at `http://localhost:3000`
+
+### Option 4: Kubernetes Deployment
+
+1. Apply Kubernetes manifests:
+   ```bash
+   kubectl apply -k k8s/
+   ```
+2. Check deployment status:
+   ```bash
+   kubectl get pods -n qr-generator
+   ```
+
 ## Usage
 
 1. **Product ID**: Enter a unique identifier for your product
@@ -88,6 +123,24 @@ QR-Code-Generator/
 ## API Endpoints
 
 The server provides RESTful endpoints for QR code generation (implementation in progress).
+
+## CI/CD Pipeline
+
+The project includes GitHub Actions workflows for automated deployment:
+
+- **Build Workflow**: Builds and pushes Docker images to DockerHub
+- **Deploy Workflow**: Deploys the application to AWS EKS
+- **Cleanup Workflow**: Manages resource cleanup
+
+### Prerequisites for CI/CD
+
+- DockerHub account and credentials
+- AWS account with EKS permissions
+- GitHub repository secrets configured:
+  - `DOCKER_USERNAME`
+  - `DOCKER_PASSWORD`
+  - `AWS_ACCESS_KEY_ID`
+  - `AWS_SECRET_ACCESS_KEY`
 
 ## Browser Compatibility
 
