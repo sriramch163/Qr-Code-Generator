@@ -43,15 +43,25 @@ jobs:
     - name: Deploy to EKS
       run: kubectl apply -k k8s/
     
-    - name: Wait for LoadBalancer
-      run: kubectl wait --for=condition=ready service/qr-code-generator-service -n qr-generator --timeout=300s
+    - name: Wait for pods
+      run: kubectl wait --for=condition=ready pod -l app=qr-code-generator -n qr-generator --timeout=300s
+    
+    - name: Check deployment status
+      run: |
+        echo "Deployment Status:"
+        kubectl get pods -n qr-generator
+        kubectl get services -n qr-generator
+        echo "LoadBalancer may take 2-5 minutes to provision..."
     
     - name: Get Application URL
       run: |
         echo "Application deployed successfully!"
-        echo "Access URL:"
-        kubectl get service qr-code-generator-service -n qr-generator -o jsonpath='{.status.loadBalancer.ingress[0].hostname}'
-        echo ""
-        echo "Full URL: http://$(kubectl get service qr-code-generator-service -n qr-generator -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')"
+        LB_HOST=$(kubectl get service qr-code-generator-service -n qr-generator -o jsonpath='{.status.loadBalancer.ingress[0].hostname}' 2>/dev/null || echo "pending")
+        if [ "$LB_HOST" != "pending" ] && [ -n "$LB_HOST" ]; then
+          echo "Access URL: http://$LB_HOST"
+        else
+          echo "LoadBalancer still provisioning. Check AWS Console or run:"
+          echo "kubectl get service qr-code-generator-service -n qr-generator"
+        fi
 
 ###
