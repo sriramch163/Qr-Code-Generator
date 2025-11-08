@@ -20,16 +20,13 @@ jobs:
       with:
         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        aws-region: ${{ secrets.AWS_REGION }}
+        aws-region: us-east-1
     
-    - name: Debug secrets
-      run: |
-        echo "Region: ${{ secrets.AWS_REGION }}"
-        echo "Cluster: ${{ secrets.EKS_CLUSTER_NAME }}"
-        aws eks list-clusters --region ${{ secrets.AWS_REGION }}
+   
+
     
     - name: Update kubeconfig
-      run: aws eks update-kubeconfig --region ${{ secrets.AWS_REGION }} --name ${{ secrets.EKS_CLUSTER_NAME }}
+      run: aws eks update-kubeconfig --region us-east-1 --name qr-code-generator-cluster
     
     - name: Update deployment image
       run: |
