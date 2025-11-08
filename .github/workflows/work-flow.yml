@@ -26,5 +26,5 @@ jobs:
         context: .
         push: true
         tags: |
-          ${{ secrets.DOCKER_USERNAME }}/qr-code-generator:latest
+          
           ${{ secrets.DOCKER_USERNAME }}/qr-code-generator:build-${{ github.run_number }}
