@@ -1,8 +1,8 @@
-name: CI/CD Pipeline
+name: Pushing Docker Image After Build
 
 on:
   workflow_run:
-    workflows: ["Build and Push Docker Image"]
+    workflows: ["Building Docker Image"]
     types:
       - completed
 
